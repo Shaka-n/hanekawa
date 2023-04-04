@@ -9,6 +9,8 @@ defmodule Hanekawa.Repo.Migrations.AddMovieNightTable do
 
       timestamps()
     end
+
+    create unique_index(:movie_nights, [:date])
   end
 
   def down do

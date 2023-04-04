@@ -37,6 +37,7 @@ defmodule Hanekawa.MixProject do
       {:ecto_sql, "~> 3.6"},
       {:nostrum, git: "https://github.com/Kraigie/nostrum.git"},
       {:cowlib, "~> 2.11", hex: :remedy_cowlib, override: true},
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
