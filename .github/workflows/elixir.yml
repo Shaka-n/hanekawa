@@ -1,34 +1,62 @@
 name: Elixir CI
 
 on:
+  pull_request:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
-
+    
+env:
+  MIX_ENV: test
+  
 jobs:
-  build:
-
-    name: Build and test
+  test:
     runs-on: ubuntu-latest
-
+    
+    strategy:
+      matrix:
+        elixir: [1.14.3]
+        otp: [25]
+    
+    services:
+      db:
+        image: postgres:15.2-alpine
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: hanekawa_dev
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          
     steps:
     - uses: actions/checkout@v3
+    
     - name: Set up Elixir
-      uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+      uses: erlef/setup-beam@v1
       with:
-        elixir-version: '1.14.3' # Define the elixir version [required]
-        otp-version: '25' # Define the OTP version [required]
-    - name: Restore dependencies cache
+        elixir-version: ${{ matrix.elixir }}
+        otp-version: ${{ matrix.op }}
+        
+    - name: Retrieve Mix Dependencies Cache
       uses: actions/cache@v3
+      id: mix-caache
       with:
         path: deps
-        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
+        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+ 
     - name: Install dependencies
-      run: mix deps.get
+      run: |
+        mix local.hex --force
+        mix deps.get
+        
     - name: Run tests
       run: mix test
+      
+    - name: Check Formatting
+      run: mix format --check-formatted
+      
+    - name: Compile project without warnings
+      run: mix compile --warnings-as-errors
