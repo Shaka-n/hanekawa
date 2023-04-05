@@ -32,4 +32,7 @@ config :logger, level: :warning
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
-import_config "dev.secret.exs"
+config :nostrum,
+  token: System.get_env("HANEKAWA_BOT_TOKEN"),
+  gateway_intents: :all,
+  dev: true

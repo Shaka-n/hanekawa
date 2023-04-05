@@ -78,4 +78,7 @@ config :phoenix, :plug_init_mode, :runtime
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
 
-import_config "dev.secret.exs"
+config :nostrum,
+  token: System.get_env("HANEKAWA_BOT_TOKEN"),
+  gateway_intents: :all,
+  dev: true
