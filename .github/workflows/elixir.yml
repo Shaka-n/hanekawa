@@ -1,9 +1,6 @@
 name: Elixir CI
 
-on:
-  pull_request:
-  push:
-    branches: [ "main" ]
+on: [pull_request, push]
     
 env:
   MIX_ENV: test
@@ -51,6 +48,8 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
  
     - name: Install dependencies
+      with:
+        token: ${{ secrets.HANEKAWA_BOT_TOKEN }} 
       run: |
         mix local.hex --force
         mix deps.get
