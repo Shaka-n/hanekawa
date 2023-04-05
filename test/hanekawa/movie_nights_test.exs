@@ -114,7 +114,7 @@ defmodule Hanekawa.MovieNightsTest do
 
   describe "cancel_movie_night/1" do
     test "accepts a date as a string and cancels a movie night" do
-      %{date: original_date} = movie_night = MovieNightFixtures.movie_night_fixture()
+      %{date: original_date} = MovieNightFixtures.movie_night_fixture()
       {result, _} = MovieNights.cancel_movie_night(Date.to_string(original_date))
 
       assert result == :ok
