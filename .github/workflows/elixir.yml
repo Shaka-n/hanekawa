@@ -35,7 +35,9 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Testing Env Vars
-      run: echo ${{ secrets.TEST_SECRET }}
+      run: echo $TEST_SECRET
+      env:
+        TEST_SECRET: ${{ secrets.TEST_SECRET }}
     
     - name: Set up Elixir
       uses: erlef/setup-beam@v1
