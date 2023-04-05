@@ -17,6 +17,6 @@ defmodule Hanekawa.MovieNightFixtures do
       })
       |> Hanekawa.MovieNights.create_movie_night()
 
-      movie_night
+    movie_night
   end
 end

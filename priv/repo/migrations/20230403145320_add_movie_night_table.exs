@@ -3,7 +3,7 @@ defmodule Hanekawa.Repo.Migrations.AddMovieNightTable do
 
   def up do
     create table("movie_nights") do
-      add :date, :date, null: :false
+      add :date, :date, null: false
       add :movie_title, :string
       add :creator_id, :string
 

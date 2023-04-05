@@ -9,6 +9,7 @@ defmodule Hanekawa.Consumer do
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
     IO.inspect(msg, label: "Message Created")
+
     case msg.content do
       "!sleep" ->
         Api.create_message(msg.channel_id, "Going to sleep...")

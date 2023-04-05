@@ -8,6 +8,5 @@ defmodule HanekawaWeb.PageController do
   end
 
   def interactions(_conn, _params) do
-
   end
 end

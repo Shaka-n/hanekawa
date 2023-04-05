@@ -2,8 +2,6 @@ defmodule Hanekawa.MovieNightsTest do
   use Hanekawa.DataCase, async: true
   alias Hanekawa.{MovieNight, MovieNights}
   alias Hanekawa.MovieNightFixtures
-  alias Hanekawa.Repo
-
 
   describe "schedule_movie_night/1" do
     test "creates a movie night given a date" do
@@ -19,7 +17,7 @@ defmodule Hanekawa.MovieNightsTest do
     end
 
     test "will prevent double booking movie nights" do
-      {:ok, movie_night} = MovieNights.schedule_movie_night(%{date: "2055-03-06"})
+      {:ok, _movie_night} = MovieNights.schedule_movie_night(%{date: "2055-03-06"})
       {result, _} = MovieNights.schedule_movie_night(%{date: "2055-03-06"})
       assert result == :error
     end
@@ -30,7 +28,13 @@ defmodule Hanekawa.MovieNightsTest do
     end
 
     test "accepts and persists a movie title and creator id" do
-      {:ok, movie_night} = MovieNights.schedule_movie_night(%{date: "3/6/99", creator_id: "1234567890", movie_title: "The Wizard SoSo"})
+      {:ok, movie_night} =
+        MovieNights.schedule_movie_night(%{
+          date: "3/6/99",
+          creator_id: "1234567890",
+          movie_title: "The Wizard SoSo"
+        })
+
       assert movie_night.movie_title == "The Wizard SoSo"
       assert movie_night.creator_id == "1234567890"
     end
@@ -42,7 +46,9 @@ defmodule Hanekawa.MovieNightsTest do
       tomorrow = Date.add(today, 1)
       day_after_tomorrow = Date.add(today, 2)
 
-      {:ok, next_movie_night} = MovieNights.schedule_movie_night(%{date: Date.to_string(tomorrow)})
+      {:ok, next_movie_night} =
+        MovieNights.schedule_movie_night(%{date: Date.to_string(tomorrow)})
+
       MovieNights.schedule_movie_night(%{date: Date.to_string(day_after_tomorrow)})
 
       result = MovieNights.get_next_movie_night()
@@ -65,7 +71,7 @@ defmodule Hanekawa.MovieNightsTest do
   describe "get_movie_night_by_date/1" do
     test "accepts a date as a string and gets the corresponding movie night if it exists" do
       movie_night = MovieNightFixtures.movie_night_fixture()
-     {:ok, result} = MovieNights.get_movie_night_by_date(movie_night.date)
+      {:ok, result} = MovieNights.get_movie_night_by_date(movie_night.date)
 
       assert result.date == movie_night.date
     end
@@ -76,7 +82,14 @@ defmodule Hanekawa.MovieNightsTest do
       today = Date.utc_today()
       day_after_tomorrow = Date.add(today, 2)
       %{date: original_date} = MovieNightFixtures.movie_night_fixture()
-      {:ok, result} = MovieNights.reschedule_movie_night(%{date: Date.to_string(original_date), new_date: Date.to_string(day_after_tomorrow), creator_id: "0987654321", movie_title: "Lawnmower Man"})
+
+      {:ok, result} =
+        MovieNights.reschedule_movie_night(%{
+          date: Date.to_string(original_date),
+          new_date: Date.to_string(day_after_tomorrow),
+          creator_id: "0987654321",
+          movie_title: "Lawnmower Man"
+        })
 
       assert result.date == day_after_tomorrow
       assert result.movie_title == "Lawnmower Man"
@@ -88,7 +101,12 @@ defmodule Hanekawa.MovieNightsTest do
       yesterday = Date.add(today, -1)
       day_after_tomorrow = Date.add(today, 2)
       %{date: original_date} = MovieNightFixtures.movie_night_fixture(%{date: yesterday})
-      {result, _} = MovieNights.reschedule_movie_night(%{date: Date.to_string(original_date), new_date: Date.to_string(day_after_tomorrow)})
+
+      {result, _} =
+        MovieNights.reschedule_movie_night(%{
+          date: Date.to_string(original_date),
+          new_date: Date.to_string(day_after_tomorrow)
+        })
 
       assert result == :error
     end
@@ -96,7 +114,7 @@ defmodule Hanekawa.MovieNightsTest do
 
   describe "cancel_movie_night/1" do
     test "accepts a date as a string and cancels a movie night" do
-       %{date: original_date} =movie_night = MovieNightFixtures.movie_night_fixture()
+      %{date: original_date} = movie_night = MovieNightFixtures.movie_night_fixture()
       {result, _} = MovieNights.cancel_movie_night(Date.to_string(original_date))
 
       assert result == :ok
