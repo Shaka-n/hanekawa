@@ -38,7 +38,7 @@ jobs:
       uses: erlef/setup-beam@v1
       with:
         elixir-version: ${{ matrix.elixir }}
-        otp-version: ${{ matrix.op }}
+        otp-version: ${{ matrix.otp }}
         
     - name: Retrieve Mix Dependencies Cache
       uses: actions/cache@v3
