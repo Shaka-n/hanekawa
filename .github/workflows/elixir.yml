@@ -4,11 +4,7 @@ on:
   pull_request:
   push:
     branches: [ "main" ]
-    
-env:
-  MIX_ENV: test
-  HANEKAWA_BOT_TOKEN: ${{ secrets.HANEKAWA_BOT_TOKEN }}
-  
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -34,11 +30,6 @@ jobs:
           
     steps:
     - uses: actions/checkout@v3
-
-    - name: Testing Env Vars
-      run: echo $TEST_SECRET
-      env:
-        TEST_SECRET: ${{ secrets.TEST_SECRET }}
     
     - name: Set up Elixir
       uses: erlef/setup-beam@v1
