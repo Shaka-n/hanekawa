@@ -7,7 +7,7 @@ on:
     
 env:
   MIX_ENV: test
-  HANEKAWA_BOT_TOKEN: ${{ secrets.HANEKAWA_BOT_TOKEN }}
+  HANEKAWA_BOT_TOKEN: ${{secrets.HANEKAWA_BOT_TOKEN}}
   
 jobs:
   test:
