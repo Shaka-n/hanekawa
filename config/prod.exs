@@ -19,3 +19,7 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+
+config :nostrum,
+  token: System.get_env("HANEKAWA_BOT_TOKEN"),
+  gateway_intents: :all
