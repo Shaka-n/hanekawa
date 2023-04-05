@@ -7,7 +7,7 @@ defmodule Hanekawa.MovieNight do
 
   schema "movie_nights" do
     field :date, :date
-    field :movie_title, :string
+    field :movie_title, :string, default: ""
     field :creator_id, :string
 
     timestamps()
