@@ -10,13 +10,13 @@ defmodule Hanekawa.MovieNights do
   require Logger
 
   def schedule_movie_night(%{date: date_string} = attrs) do
-    with {:ok, date} <- parse_date(date_string) do
+    with {:ok, date} <- date_string_to_iso8601_date(date_string) do
       case Date.compare(date, Date.utc_today()) do
         :gt ->
-          create_movie_night(%{attrs | date: date})
+          create_movie_night(%{attrs | date: date})|>IO.inspect(label: "======insert result========")
 
         :eq ->
-          {:error, "you shouldn't need a same-day reminder. dingus."}
+          {:error, "Can't set a reminder for the same day, sorry."}
 
         :lt ->
           {:error, "provided date has already past"}
@@ -40,7 +40,7 @@ defmodule Hanekawa.MovieNights do
     |> where([mn], mn.date >= ^today)
     |> order_by([mn], asc: mn.date)
     |> limit(1)
-    |> Repo.one()
+    |> Repo.one!()
   end
 
   # This function should take an ISO8601 date (i.e. 3-6-23) and return a movie night if there is one scheduled for that date.
@@ -56,8 +56,8 @@ defmodule Hanekawa.MovieNights do
 
   # This function should reschedule a movie night scheduled on the provided date with the given attrs.
   def reschedule_movie_night(%{date: old_date_string, new_date: new_date_string} = attrs) do
-    with {:ok, old_date} <- parse_date(old_date_string),
-         {:ok, new_date} <- parse_date(new_date_string),
+    with {:ok, old_date} <- date_string_to_iso8601_date(old_date_string),
+         {:ok, new_date} <- date_string_to_iso8601_date(new_date_string),
          :gt <- Date.compare(old_date, Date.utc_today()),
          {:ok, movie_night} <- get_movie_night_by_date(old_date) do
       update_movie_night(movie_night, %{attrs | date: new_date})
@@ -79,7 +79,7 @@ defmodule Hanekawa.MovieNights do
 
   # Cancels a movie night on the given date.
   def cancel_movie_night(date_string) do
-    with {:ok, date} <- parse_date(date_string),
+    with {:ok, date} <- date_string_to_iso8601_date(date_string),
          {:ok, movie_night} <- get_movie_night_by_date(date) do
       delete_movie_night(movie_night)
     else
@@ -93,7 +93,7 @@ defmodule Hanekawa.MovieNights do
     Repo.delete(movie_night)
   end
 
-  def parse_date(date_string) do
+  def date_string_to_iso8601_date(date_string) do
     with {:ok, date} <- Date.from_iso8601(date_string) do
       {:ok, date}
     else
@@ -112,6 +112,15 @@ defmodule Hanekawa.MovieNights do
             err
         end
     end
+  end
+
+  def date_to_mdy_string(date) do
+    date_string = Date.to_string(date)
+
+    [year, month, day] = String.split(date_string, "-")
+
+    month <> "/" <> day <> "/" <> year
+
   end
 
   defp input_to_iso_date_string(month, day, year) do
