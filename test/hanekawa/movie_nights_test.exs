@@ -121,9 +121,9 @@ defmodule Hanekawa.MovieNightsTest do
     end
   end
 
-  describe "parse_date/1" do
+  describe "date_string_to_iso8601_date/1" do
     test "accepts a date as a string separated by dashes or forward slashes and returns a date" do
-      {:ok, date} = MovieNights.parse_date("2055-03-06")
+      {:ok, date} = MovieNights.date_string_to_iso8601_date("2055-03-06")
 
       assert ~D[2055-03-06] == date
     end

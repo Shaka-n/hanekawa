@@ -9,12 +9,10 @@ defmodule Hanekawa.Consumer do
   end
 
   def handle_event({:INTERACTION_CREATE, interaction, _ws_state}) do
-    IO.inspect(interaction)
     InteractionCreate.handle(interaction)
   end
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
-    IO.inspect(msg, label: "Message Created")
 
     case msg.content do
       "!sleep" ->

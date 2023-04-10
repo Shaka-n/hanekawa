@@ -13,7 +13,7 @@ defmodule Hanekawa.MovieNights do
     with {:ok, date} <- date_string_to_iso8601_date(date_string) do
       case Date.compare(date, Date.utc_today()) do
         :gt ->
-          create_movie_night(%{attrs | date: date})|>IO.inspect(label: "======insert result========")
+          create_movie_night(%{attrs | date: date})
 
         :eq ->
           {:error, "Can't set a reminder for the same day, sorry."}

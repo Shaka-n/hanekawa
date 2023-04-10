@@ -14,12 +14,11 @@ defmodule Hanekawa.Consumer.InteractionCreate do
 
   def handle(%Interaction{data: %{name: "movienight", options: [%{name: subcommand}]}} = interaction) do
      with atom_subcommand <- String.to_existing_atom(subcommand) do
-      IO.inspect(atom_subcommand, label: "=============HANDLER=============")
       do_movie_night(interaction, atom_subcommand)
     end
   end
 
-  def do_movie_night(%Interaction{data: %{options: [%{options: [%{value: date}, %{value: movie_title}]}]}}= interaction, :schedule) do
+  def do_movie_night(%Interaction{data: %{options: [%{options: [%{value: date}, %{value: movie_title}]}]}} = interaction, :schedule) do
     creator_id = Integer.to_string(interaction.user.id)
     case MovieNights.schedule_movie_night(%{date: date, movie_title: movie_title, creator_id: creator_id}) do
       {:ok, movie_night} ->
