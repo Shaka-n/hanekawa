@@ -7,8 +7,9 @@ defmodule Hanekawa.MovieNight do
 
   schema "movie_nights" do
     field :date, :date
-    field :movie_title, :string, default: ""
+    field :movie_title, :string
     field :creator_id, :string
+    field :channel_id, :string
 
     timestamps()
   end
@@ -18,7 +19,8 @@ defmodule Hanekawa.MovieNight do
     |> cast(attrs, [
       :date,
       :movie_title,
-      :creator_id
+      :creator_id,
+      :channel_id
     ])
     |> validate_required([
       :date

@@ -13,7 +13,7 @@ defmodule Hanekawa.MovieNights do
     with {:ok, date} <- date_string_to_iso8601_date(date_string) do
       case Date.compare(date, Date.utc_today()) do
         :gt ->
-          create_movie_night(%{attrs | date: date})
+          create_movie_night(%{attrs | date: date}) |> IO.inspect(label: "=======Context========")
 
         :eq ->
           {:error, "Can't set a reminder for the same day, sorry."}
@@ -59,7 +59,8 @@ defmodule Hanekawa.MovieNights do
     with {:ok, old_date} <- date_string_to_iso8601_date(old_date_string),
          {:ok, new_date} <- date_string_to_iso8601_date(new_date_string),
          :gt <- Date.compare(old_date, Date.utc_today()),
-         {:ok, movie_night} <- get_movie_night_by_date(old_date) do
+         {:ok, movie_night} <- get_movie_night_by_date(old_date),
+         {:ok, _} <- cancel_movie_night_reminders(movie_night.id) do
       update_movie_night(movie_night, %{attrs | date: new_date})
     else
       :lt ->
@@ -80,7 +81,8 @@ defmodule Hanekawa.MovieNights do
   # Cancels a movie night on the given date.
   def cancel_movie_night(date_string) do
     with {:ok, date} <- date_string_to_iso8601_date(date_string),
-         {:ok, movie_night} <- get_movie_night_by_date(date) do
+         {:ok, movie_night} <- get_movie_night_by_date(date),
+         {:ok, _} <- cancel_movie_night_reminders(movie_night.id) do
       delete_movie_night(movie_night)
     else
       err ->
@@ -91,6 +93,13 @@ defmodule Hanekawa.MovieNights do
   # Deletes a given movie night
   def delete_movie_night(movie_night) do
     Repo.delete(movie_night)
+  end
+
+  # When a movie night is canceled or rescheduled we want to delete all queued reminders for that original date.
+  defp cancel_movie_night_reminders(movie_night_id) do
+    Oban.Job
+    |> where(movie_night_id: ^movie_night_id)
+    |> Oban.cancel_all_jobs()
   end
 
   def date_string_to_iso8601_date(date_string) do
@@ -120,7 +129,6 @@ defmodule Hanekawa.MovieNights do
     [year, month, day] = String.split(date_string, "-")
 
     month <> "/" <> day <> "/" <> year
-
   end
 
   defp input_to_iso_date_string(month, day, year) do

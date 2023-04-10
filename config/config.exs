@@ -64,6 +64,16 @@ config :nostrum,
   token: System.get_env("HANEKAWA_BOT_TOKEN"),
   gateway_intents: :all
 
+# Configures Oban for the movie night reminders
+config :hanekawa, Oban,
+  repo: Hanekawa.Repo,
+  plugins: [
+    crontab: [
+      {"0 0 * * *", Hanekawa.CheckMovieNight}
+    ]
+  ],
+  queues: [default: 10]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
