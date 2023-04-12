@@ -1,4 +1,8 @@
 defmodule Hanekawa.Consumer do
+  @moduledoc """
+    This module defines the consumer agent that acts as a gateway event handler for
+    events passed from the Discord WebSocket connection.
+  """
   use Nostrum.Consumer
 
   alias Hanekawa.Consumer.InteractionCreate
@@ -12,21 +16,11 @@ defmodule Hanekawa.Consumer do
     InteractionCreate.handle(interaction)
   end
 
+  # This is just meant to verify that the connection is working as expected.
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
     case msg.content do
-      "!sleep" ->
-        Api.create_message(msg.channel_id, "Going to sleep...")
-        # This won't stop other events from being handled.
-        Process.sleep(3000)
-
-      "!baka" ->
-        Api.create_message(msg.channel_id, "I-it's not like I like you or anything!~")
-
-      "!hanabi" ->
-        Api.create_message(msg.channel_id, "I love fireworks!")
-
       "!ping" ->
-        Api.create_message(msg.channel_id, "Ouch! Quit throwing things!")
+        Api.create_message(msg.channel_id, "pong!")
 
       "!raise" ->
         # This won't crash the entire Consumer.
@@ -37,8 +31,7 @@ defmodule Hanekawa.Consumer do
     end
   end
 
-  # Default event handler, if you don't include this, your consumer WILL crash if
-  # you don't have a method definition for each event type.
+  # Default event handler. Consumer will crash if given an event it hasn't been told explicitly how to handle.
   def handle_event(_event) do
     :noop
   end

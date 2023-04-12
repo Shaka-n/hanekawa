@@ -1,9 +1,8 @@
 defmodule Hanekawa.ConsumerSupervisor do
   @moduledoc """
-  Supervises Hanekawa's consumers.
+  Supervises Hanekawa's consumers, mainly the gateway handler for Discord events.
 
-  Per the Nostrum documentation, this spawns one consumer per CPU,
-  which can be found from the number of schedulers online.
+  Spawns one consumer per CPU, which can be found from the number of schedulers online.
   """
 
   use Supervisor

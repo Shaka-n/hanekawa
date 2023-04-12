@@ -1,4 +1,7 @@
 defmodule Hanekawa.Workers.CheckMovieNight do
+  @moduledoc """
+  This module defines an Oban worker which runs every day at midnight to check if a reminder job should be queued.
+  """
   use Oban.Worker, queue: :default, max_attempts: 1
 
   alias Hanekawa.Workers.MovieNight

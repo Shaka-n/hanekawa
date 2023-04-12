@@ -1,4 +1,8 @@
 defmodule Hanekawa.Consumer.InteractionCreate do
+  @moduledoc """
+    This module holds the context for Interaction Create events from the Discord API.
+    In other words, this is where we handle logic for slash commands input from users.
+  """
   alias Nostrum.Api
   alias Nostrum.Struct.Interaction
   alias Hanekawa.MovieNights
@@ -167,9 +171,5 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       type: 4,
       data: %{content: content}
     }
-  end
-
-  defp interaction_commands() do
-    @commands
   end
 end

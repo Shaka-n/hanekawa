@@ -1,7 +1,9 @@
 defmodule Hanekawa.Workers.MovieNight do
+  @moduledoc """
+  Sends messages to Discord every day at noon.
+  """
   use Oban.Worker, queue: :default
 
-  # Sends reminder messages to Discord.
   @impl Oban.Worker
   def perform(%Oban.Job{
         args:

@@ -71,7 +71,8 @@ config :hanekawa, Oban,
     Oban.Plugins.Pruner,
     {Oban.Plugins.Cron,
      crontab: [
-       {"0 0 * * *", Hanekawa.Workers.CheckMovieNight}
+       {"0 0 * * *", Hanekawa.Workers.CheckMovieNight},
+       {"0 12 * * *", Hanekawa.Workers.MovieNight}
      ]}
   ],
   queues: [default: 10]

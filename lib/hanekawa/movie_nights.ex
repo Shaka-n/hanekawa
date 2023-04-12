@@ -9,6 +9,10 @@ defmodule Hanekawa.MovieNights do
 
   require Logger
 
+  @doc """
+  A function to schedule movie nights. Checks to see that the date it's been given is valid
+  and that the chosen date is later than the current day.
+  """
   def schedule_movie_night(%{date: date_string} = attrs) do
     with {:ok, date} <- date_string_to_iso8601_date(date_string) do
       case Date.compare(date, Date.utc_today()) do
@@ -26,13 +30,18 @@ defmodule Hanekawa.MovieNights do
     end
   end
 
+  @doc """
+  Generic create function to insert movie night records
+  """
   def create_movie_night(attrs) do
     %MovieNight{}
     |> MovieNight.changeset(attrs)
     |> Repo.insert()
   end
 
-  # This function should return the next scheduled movie night
+  @doc """
+  Returns the next scheduled movie night
+  """
   def get_next_movie_night() do
     today = Date.utc_today()
 
@@ -43,7 +52,9 @@ defmodule Hanekawa.MovieNights do
     |> Repo.one!()
   end
 
-  # This function should take an ISO8601 date (i.e. 3-6-23) and return a movie night if there is one scheduled for that date.
+  @doc """
+   Accepts an ISO8601 Date (i.e. 23-3-6) and returns a movie night if there is one scheduled for that date.
+  """
   def get_movie_night_by_date(date) do
     case Repo.get_by(MovieNight, date: date) do
       nil ->
@@ -54,7 +65,10 @@ defmodule Hanekawa.MovieNights do
     end
   end
 
-  # This function should reschedule a movie night scheduled on the provided date with the given attrs.
+  @doc """
+  Reschedules a movie night scheduled on the provided date with the newly provided date. Can also be used to update
+  the movie title. Any associated reminders in the Oban queue will also be canceled.
+  """
   def reschedule_movie_night(%{date: old_date_string, new_date: new_date_string} = attrs) do
     with {:ok, old_date} <- date_string_to_iso8601_date(old_date_string),
          {:ok, new_date} <- date_string_to_iso8601_date(new_date_string),
@@ -71,13 +85,19 @@ defmodule Hanekawa.MovieNights do
     end
   end
 
-  # This function should update a given movie night with the given attrs
+  @doc """
+  Generic update function for movie nights
+  """
   def update_movie_night(movie_night, attrs) do
     movie_night
     |> MovieNight.changeset(attrs)
     |> Repo.update()
   end
 
+  @doc """
+  Accepts a date as a string and cancels a movie night scheduled on that day.
+  This will also cancel any associated reminders in the Oban queue.
+  """
   # Cancels a movie night on the given date.
   def cancel_movie_night(date_string) do
     with {:ok, date} <- date_string_to_iso8601_date(date_string),
@@ -90,11 +110,15 @@ defmodule Hanekawa.MovieNights do
     end
   end
 
-  # Deletes a given movie night
+  @doc """
+  Generic delete function for movie nights.
+  """
   def delete_movie_night(movie_night) do
     Repo.delete(movie_night)
   end
 
+
+  # Helper function for canceling reminder jobs in the Oban queue.
   # When a movie night is canceled or rescheduled we want to delete all queued reminders for that original date.
   defp cancel_movie_night_reminders(movie_night_id) do
     Oban.Job
@@ -103,6 +127,9 @@ defmodule Hanekawa.MovieNights do
     |> Oban.cancel_all_jobs()
   end
 
+  @doc """
+  Helper function for converting a user provided string into a Date.
+  """
   def date_string_to_iso8601_date(date_string) do
     with {:ok, date} <- Date.from_iso8601(date_string) do
       {:ok, date}
@@ -124,6 +151,9 @@ defmodule Hanekawa.MovieNights do
     end
   end
 
+  @doc """
+  Helper function for returning a Date as a string in a more familiar format. (i.e. MM/DD/YYYY)
+  """
   def date_to_mdy_string(date) do
     date_string = Date.to_string(date)
 
@@ -132,6 +162,7 @@ defmodule Hanekawa.MovieNights do
     month <> "/" <> day <> "/" <> year
   end
 
+  # Helper function for reformatting an input string to ISO8601
   defp input_to_iso_date_string(month, day, year) do
     full_year =
       case String.length(year) do
