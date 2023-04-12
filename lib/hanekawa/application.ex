@@ -20,6 +20,7 @@ defmodule Hanekawa.Application do
       HanekawaWeb.Endpoint,
       # Start a worker by calling: Hanekawa.Worker.start_link(arg)
       # {Hanekawa.Worker, arg}
+      {Oban, Application.fetch_env!(:hanekawa, Oban)},
       Hanekawa.ConsumerSupervisor
     ]
 

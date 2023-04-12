@@ -68,9 +68,11 @@ config :nostrum,
 config :hanekawa, Oban,
   repo: Hanekawa.Repo,
   plugins: [
+    Oban.Plugins.Pruner,
+    {Oban.Plugins.Cron,
     crontab: [
-      {"0 0 * * *", Hanekawa.CheckMovieNight}
-    ]
+      {"0 0 * * *", Hanekawa.Workers.CheckMovieNight}
+    ]}
   ],
   queues: [default: 10]
 

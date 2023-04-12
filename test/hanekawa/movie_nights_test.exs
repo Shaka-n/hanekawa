@@ -1,5 +1,7 @@
 defmodule Hanekawa.MovieNightsTest do
   use Hanekawa.DataCase, async: true
+  use Oban.Testing, repo: Hanekawa.Repo
+
   alias Hanekawa.{MovieNight, MovieNights}
   alias Hanekawa.MovieNightFixtures
 

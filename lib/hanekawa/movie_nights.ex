@@ -98,7 +98,8 @@ defmodule Hanekawa.MovieNights do
   # When a movie night is canceled or rescheduled we want to delete all queued reminders for that original date.
   defp cancel_movie_night_reminders(movie_night_id) do
     Oban.Job
-    |> where(movie_night_id: ^movie_night_id)
+    |> where([j], j.worker == "Hanekawa.MovieNight")
+    |> where([j], j.args == ^%{movie_night_id: movie_night_id})
     |> Oban.cancel_all_jobs()
   end
 

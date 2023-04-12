@@ -36,3 +36,6 @@ config :nostrum,
   token: System.get_env("HANEKAWA_BOT_TOKEN"),
   gateway_intents: :all,
   dev: true
+
+config :oban,
+  testing: :inline
