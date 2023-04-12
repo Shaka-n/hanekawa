@@ -25,6 +25,19 @@ defmodule Hanekawa.MovieNight do
     |> validate_required([
       :date
     ])
+    |> validate_is_today_or_later(:date)
     |> unique_constraint(:date)
+  end
+
+  def validate_is_today_or_later(changeset, field) when is_atom(field) do
+    validate_change(changeset, field, fn field, value ->
+      case Date.compare(value, Date.utc_today()) do
+        :lt ->
+          [{field, "cannot schedule movies in the past"}]
+
+        _ ->
+          []
+      end
+    end)
   end
 end

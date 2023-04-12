@@ -57,17 +57,6 @@ defmodule Hanekawa.MovieNightsTest do
 
       assert next_movie_night.date == result.date
     end
-
-    test "does not return past movie nights" do
-      today = Date.utc_today()
-      yesterday = Date.add(today, -1)
-      tomorrow = Date.add(today, 1)
-      past_movie_night = MovieNightFixtures.movie_night_fixture(%{date: yesterday})
-      MovieNightFixtures.movie_night_fixture(%{date: tomorrow})
-      result = MovieNights.get_next_movie_night()
-
-      assert result.date != past_movie_night.date
-    end
   end
 
   describe "get_movie_night_by_date/1" do
@@ -96,21 +85,6 @@ defmodule Hanekawa.MovieNightsTest do
       assert result.date == day_after_tomorrow
       assert result.movie_title == "Lawnmower Man"
       assert result.creator_id == "0987654321"
-    end
-
-    test "does not update movie nights in the past" do
-      today = Date.utc_today()
-      yesterday = Date.add(today, -1)
-      day_after_tomorrow = Date.add(today, 2)
-      %{date: original_date} = MovieNightFixtures.movie_night_fixture(%{date: yesterday})
-
-      {result, _} =
-        MovieNights.reschedule_movie_night(%{
-          date: Date.to_string(original_date),
-          new_date: Date.to_string(day_after_tomorrow)
-        })
-
-      assert result == :error
     end
   end
 

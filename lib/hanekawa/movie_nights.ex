@@ -15,16 +15,7 @@ defmodule Hanekawa.MovieNights do
   """
   def schedule_movie_night(%{date: date_string} = attrs) do
     with {:ok, date} <- date_string_to_iso8601_date(date_string) do
-      case Date.compare(date, Date.utc_today()) do
-        :gt ->
-          create_movie_night(%{attrs | date: date}) |> IO.inspect(label: "=======Context========")
-
-        :eq ->
-          {:error, "Can't set a reminder for the same day, sorry."}
-
-        :lt ->
-          {:error, "provided date has already past"}
-      end
+      create_movie_night(%{attrs | date: date}) |> IO.inspect(label: "=======Context========")
     else
       err -> err
     end

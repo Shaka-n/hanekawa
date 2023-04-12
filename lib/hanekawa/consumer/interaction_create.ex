@@ -41,9 +41,9 @@ defmodule Hanekawa.Consumer.InteractionCreate do
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
 
-      {:error, _error} ->
+      {:error, error} ->
         Logger.error("There was a problem scheduling this movie night.")
-        Api.create_interaction_response(interaction.id, interaction.token, error_response())
+        Api.create_interaction_response(interaction.id, interaction.token, error_response(error))
     end
   end
 
@@ -60,6 +60,8 @@ defmodule Hanekawa.Consumer.InteractionCreate do
            channel_id: channel_id
          }) do
       {:ok, movie_night} ->
+        IO.inspect(movie_night, label: "=======Handler=======")
+
         response =
           message_response(
             "Movie night scheduled! We're watching something on #{MovieNights.date_to_mdy_string(movie_night.date)}! (That's a #{Utils.date_day_of_week_to_string(movie_night.date)})"
@@ -67,9 +69,9 @@ defmodule Hanekawa.Consumer.InteractionCreate do
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
 
-      {:error, _error} ->
-        Logger.error("There was a problem scheduling this movie night.")
-        Api.create_interaction_response(interaction.id, interaction.token, error_response())
+      {:error, error} ->
+        Logger.error(%{error: error})
+        Api.create_interaction_response(interaction.id, interaction.token, error_response(error))
     end
   end
 
@@ -103,9 +105,9 @@ defmodule Hanekawa.Consumer.InteractionCreate do
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
 
-      {:error, _error} ->
+      {:error, error} ->
         Logger.error("There was a problem rescheduling this movie night.")
-        Api.create_interaction_response(interaction.id, interaction.token, error_response())
+        Api.create_interaction_response(interaction.id, interaction.token, error_response(error))
     end
   end
 
@@ -130,9 +132,9 @@ defmodule Hanekawa.Consumer.InteractionCreate do
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
 
-      {:error, _error} ->
+      {:error, error} ->
         Logger.error("There was a problem rescheduling this movie night.")
-        Api.create_interaction_response(interaction.id, interaction.token, error_response())
+        Api.create_interaction_response(interaction.id, interaction.token, error_response(error))
     end
   end
 
@@ -150,14 +152,26 @@ defmodule Hanekawa.Consumer.InteractionCreate do
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
 
-      {:error, _error} ->
+      {:error, error} ->
         Logger.error("There was a problem canceling this movie night.")
-        Api.create_interaction_response(interaction.id, interaction.token, error_response())
+        Api.create_interaction_response(interaction.id, interaction.token, error_response(error))
     end
   end
 
-  defp error_response() do
-    message_response("There was a problem scheduling your movie.")
+  defp error_response(error) do
+    errors =
+      Ecto.Changeset.traverse_errors(error, fn {msg, opts} ->
+        Enum.reduce(opts, msg, fn {key, value}, acc ->
+          String.replace(acc, "%#{key}", to_string(value))
+        end)
+      end)
+
+    error_msg =
+      errors
+      |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
+      |> Enum.join("\n")
+
+    message_response("There was a problem scheduling your movie. Reason: #{error_msg}")
   end
 
   defp message_response(content) do

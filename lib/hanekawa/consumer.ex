@@ -18,6 +18,7 @@ defmodule Hanekawa.Consumer do
 
   # This is just meant to verify that the connection is working as expected.
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
+    # IO.inspect(msg)
     case msg.content do
       "!ping" ->
         Api.create_message(msg.channel_id, "pong!")
@@ -25,6 +26,15 @@ defmodule Hanekawa.Consumer do
       "!raise" ->
         # This won't crash the entire Consumer.
         raise "No problems here!"
+
+      "!hello" ->
+        Api.create_message(msg.channel_id, "Hello! My name is Hanekawa. It's nice to meet you.")
+
+      "!thankyou" ->
+        Api.create_message(
+          msg.channel_id,
+          "You're welcome #{msg.member.nick}! You're my favorite classmate! <3"
+        )
 
       _ ->
         :ignore
