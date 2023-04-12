@@ -6,6 +6,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
   alias Nostrum.Api
   alias Nostrum.Struct.Interaction
   alias Hanekawa.MovieNights
+  alias Hanekawa.Utils
 
   require Logger
 
@@ -42,7 +43,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       {:ok, movie_night} ->
         response =
           message_response(
-            "Movie night scheduled! We're watching #{movie_night.movie_title} on #{MovieNights.date_to_mdy_string(movie_night.date)}!"
+            "Movie night scheduled! We're watching #{movie_night.movie_title} on #{MovieNights.date_to_mdy_string(movie_night.date)}! (That's a #{Utils.date_day_of_week_to_string(movie_night.date)})"
           )
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
@@ -68,7 +69,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       {:ok, movie_night} ->
         response =
           message_response(
-            "Movie night scheduled! We're watching something on #{MovieNights.date_to_mdy_string(movie_night.date)}!"
+            "Movie night scheduled! We're watching something on #{MovieNights.date_to_mdy_string(movie_night.date)}! (That's a #{Utils.date_day_of_week_to_string(movie_night.date)})"
           )
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
@@ -88,7 +89,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       movie_night ->
         response =
           message_response(
-            "The next movie night is scheduled for #{MovieNights.date_to_mdy_string(movie_night.date)}. We decided on #{movie_night.movie_title}"
+            "The next movie night is scheduled for #{MovieNights.date_to_mdy_string(movie_night.date)}. That's a #{Utils.date_day_of_week_to_string(movie_night.date)}). We decided on #{movie_night.movie_title}"
           )
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
@@ -104,7 +105,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       {:ok, movie_night} ->
         response =
           message_response(
-            "Movie night scheduled! We're watching #{movie_night.movie_title} on #{movie_night.date}! "
+            "Movie night scheduled! We're watching #{movie_night.movie_title} on #{movie_night.date}!"
           )
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
@@ -131,7 +132,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       {:ok, movie_night} ->
         response =
           message_response(
-            "Movie night scheduled! We're watching #{movie_night.movie_title} on #{MovieNights.date_to_mdy_string(movie_night.date)}! "
+            "Movie night scheduled! We're watching #{movie_night.movie_title} on #{MovieNights.date_to_mdy_string(movie_night.date)}!"
           )
 
         Api.create_interaction_response(interaction.id, interaction.token, response)

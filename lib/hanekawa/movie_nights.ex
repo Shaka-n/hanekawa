@@ -117,7 +117,6 @@ defmodule Hanekawa.MovieNights do
     Repo.delete(movie_night)
   end
 
-
   # Helper function for canceling reminder jobs in the Oban queue.
   # When a movie night is canceled or rescheduled we want to delete all queued reminders for that original date.
   defp cancel_movie_night_reminders(movie_night_id) do
