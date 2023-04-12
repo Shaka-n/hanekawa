@@ -10,13 +10,6 @@ defmodule Hanekawa.Consumer.InteractionCreate do
 
   require Logger
 
-  @commands [
-    :schedule,
-    :reschedule,
-    :next,
-    :cancel
-  ]
-
   def handle(
         %Interaction{data: %{name: "movienight", options: [%{name: subcommand}]}} = interaction
       ) do
