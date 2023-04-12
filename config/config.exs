@@ -70,9 +70,9 @@ config :hanekawa, Oban,
   plugins: [
     Oban.Plugins.Pruner,
     {Oban.Plugins.Cron,
-    crontab: [
-      {"0 0 * * *", Hanekawa.Workers.CheckMovieNight}
-    ]}
+     crontab: [
+       {"0 0 * * *", Hanekawa.Workers.CheckMovieNight}
+     ]}
   ],
   queues: [default: 10]
 
