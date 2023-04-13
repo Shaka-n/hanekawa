@@ -28,6 +28,11 @@ if config_env() == :prod do
       For example: ecto://USER:PASS@HOST/DATABASE
       """
 
+  config :nostrum,
+  token: System.get_env("HANEKAWA_BOT_TOKEN"),
+  gateway_intents: :all
+
+
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :hanekawa, Hanekawa.Repo,

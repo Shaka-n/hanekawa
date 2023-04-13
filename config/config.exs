@@ -59,11 +59,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Configures Nostrum for connecting with the Discord server.
-config :nostrum,
-  token: System.get_env("HANEKAWA_BOT_TOKEN"),
-  gateway_intents: :all
-
 # Configures Oban for the movie night reminders
 config :hanekawa, Oban,
   repo: Hanekawa.Repo,
