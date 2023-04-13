@@ -29,9 +29,8 @@ if config_env() == :prod do
       """
 
   config :nostrum,
-  token: System.get_env("HANEKAWA_BOT_TOKEN"),
-  gateway_intents: :all
-
+    token: System.get_env("HANEKAWA_BOT_TOKEN"),
+    gateway_intents: :all
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
