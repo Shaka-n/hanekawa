@@ -82,9 +82,18 @@ defmodule Hanekawa.Consumer.InteractionCreate do
         Api.create_interaction_response(interaction.id, interaction.token, response)
 
       movie_night ->
+        title_string =
+          case movie_night.movie_title do
+            nil ->
+              "We haven't picked a movie yet."
+
+            title ->
+              "We decided to watch #{title}."
+          end
+
         response =
           message_response(
-            "The next movie night is scheduled for #{MovieNights.date_to_mdy_string(movie_night.date)}. That's a #{Utils.date_day_of_week_to_string(movie_night.date)}). We decided on #{movie_night.movie_title}"
+            "The next movie night is scheduled for #{MovieNights.date_to_mdy_string(movie_night.date)} (That's a #{Utils.date_day_of_week_to_string(movie_night.date)}). #{title_string}"
           )
 
         Api.create_interaction_response(interaction.id, interaction.token, response)
