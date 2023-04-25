@@ -40,7 +40,7 @@ defmodule Hanekawa.MovieNights do
     |> where([mn], mn.date >= ^today)
     |> order_by([mn], asc: mn.date)
     |> limit(1)
-    |> Repo.one!()
+    |> Repo.one()
   end
 
   @doc """
