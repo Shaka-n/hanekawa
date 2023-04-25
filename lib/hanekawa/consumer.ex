@@ -39,6 +39,11 @@ defmodule Hanekawa.Consumer do
           "You're welcome #{msg.member.nick}!"
         )
 
+      "!help" ->
+        Api.create_message(msg.channel_id, "Command List:
+        \n 1) /movienight: contains subcommands for scheduling, rescheduling, canceling, and checking the next chosen movienight.
+        Dates for movienights should always been in MM/DD/YYYY format. The title of a movie can also be provided.")
+
       _ ->
         :ignore
     end
