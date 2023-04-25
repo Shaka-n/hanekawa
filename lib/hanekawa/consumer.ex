@@ -23,6 +23,9 @@ defmodule Hanekawa.Consumer do
       "!ping" ->
         Api.create_message(msg.channel_id, "pong!")
 
+      "!pong" ->
+        Api.create_message(msg.channel_id, "ping!")
+
       "!raise" ->
         # This won't crash the entire Consumer.
         raise "No problems here!"
@@ -33,7 +36,7 @@ defmodule Hanekawa.Consumer do
       "!thankyou" ->
         Api.create_message(
           msg.channel_id,
-          "You're welcome #{msg.member.nick}! You're my favorite classmate! <3"
+          "You're welcome #{msg.member.nick}!"
         )
 
       _ ->
