@@ -1,20 +1,11 @@
 # Hanekawa
 
-A discord bot based on a a series of jokes between friends. Is not to be used for evil. Uses Nostrum to do most of the heavy lifting.
+A discord bot based on a series of jokes between friends. 
 
-To start your Phoenix server:
+The bulk of the code can be found in lib/hanekawa. The app implements the Consumer/Surpervisor paradigm as defined by [Nostrum](https://github.com/Kraigie/nostrum). Nostrum itself is used as a wrapper for handling the WebSockets connection to the Discord Gateway API.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+As of now there is one slash command implemented: `/movienight`. This has been broken out into the additional subcommands `schedule`, `reschedule`, `cancel`, and `next`. These correspond to their respective context functions in `lib/hanekawa/movie_nights.ex`. 
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+A user schedules a movie night by typing `/movienight schedule 1/30/23` in Discord, optionally providing a title for the movie. This persists a movie night record in the database. An Oban worker runs once a day at midnight to check if there is a movie night scheduled for that day. If there is, it will enqueue another Oban job to send a notification to the Discord channel later in the day (when users are awake).
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+The Phoenix/web elements are largely unused at the moment. The intention is to eventually provide a web UI for users to review commands and other data about their server. This is on hold for the time being, due to privacy concerns.
