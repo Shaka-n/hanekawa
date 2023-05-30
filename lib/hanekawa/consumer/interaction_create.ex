@@ -180,7 +180,9 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
       |> Enum.join("\n")
 
-    message_response("There was a problem processing your request. We found this error message: #{error_msg}")
+    message_response(
+      "There was a problem processing your request. We found this error message: #{error_msg}"
+    )
   end
 
   defp message_response(content) do
