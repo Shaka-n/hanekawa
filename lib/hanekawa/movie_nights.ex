@@ -57,10 +57,10 @@ defmodule Hanekawa.MovieNights do
   end
 
   @doc """
-  Reschedules a movie night scheduled on the provided date with the newly provided date. Can also be used to update
+  Given the date of an existing movie night, this function reschedules to the new date as provided. Can also be used to update
   the movie title. Any associated reminders in the Oban queue will also be canceled.
   """
-  def reschedule_movie_night(%{date: old_date_string, new_date: new_date_string} = attrs) do
+  def change_movie_night_date_and_title(%{date: old_date_string, new_date: new_date_string} = attrs) do
     with {:ok, old_date} <- date_string_to_iso8601_date(old_date_string),
          {:ok, new_date} <- date_string_to_iso8601_date(new_date_string),
          :gt <- Date.compare(old_date, Date.utc_today()),

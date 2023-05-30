@@ -68,14 +68,14 @@ defmodule Hanekawa.MovieNightsTest do
     end
   end
 
-  describe "reschedule_movie_night/2" do
+  describe "change_movie_night_date_and_title/2" do
     test "updates an existing movie night with a new date and attrs" do
       today = Date.utc_today()
       day_after_tomorrow = Date.add(today, 2)
       %{date: original_date} = MovieNightFixtures.movie_night_fixture()
 
       {:ok, result} =
-        MovieNights.reschedule_movie_night(%{
+        MovieNights.change_movie_night_date_and_title(%{
           date: Date.to_string(original_date),
           new_date: Date.to_string(day_after_tomorrow),
           creator_id: "0987654321",

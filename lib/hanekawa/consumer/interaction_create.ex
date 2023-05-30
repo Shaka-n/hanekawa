@@ -105,7 +105,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
           interaction,
         :reschedule
       ) do
-    case MovieNights.reschedule_movie_night(%{date: date, new_date: new_date}) do
+    case MovieNights.change_movie_night_date_and_title(%{date: date, new_date: new_date}) do
       {:ok, movie_night} ->
         response =
           message_response(
@@ -128,7 +128,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
         } = interaction,
         :reschedule
       ) do
-    case MovieNights.reschedule_movie_night(%{
+    case MovieNights.change_movie_night_date_and_title(%{
            date: date,
            new_date: new_date,
            movie_title: movie_title
@@ -180,7 +180,7 @@ defmodule Hanekawa.Consumer.InteractionCreate do
       |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
       |> Enum.join("\n")
 
-    message_response("There was a problem scheduling your movie. Reason: #{error_msg}")
+    message_response("There was a problem processing your request. We found this error message: #{error_msg}")
   end
 
   defp message_response(content) do
